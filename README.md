@@ -1,6 +1,6 @@
-# NLW Agents
+# AskHubAI
 
-Projeto desenvolvido durante o evento da **Rocketseat** para criar uma aplicação de salas de chat com React e TypeScript.
+Projeto desenvolvido e inspirado durante o evento da **Rocketseat** para criar uma aplicação de salas de chat com React e TypeScript.
 
 ## 🚀 Tecnologias
 
@@ -98,4 +98,4 @@ A aplicação consome uma API REST local rodando em `http://localhost:3333` com 
 
 ---
 
-Desenvolvido com ❤️ durante o evento NLW da Rocketseat
+
