@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { useCreateRoom } from '@/http/useCreateRoom'
+import { useCreateRoom } from '@/http/use-create-room'
 import { Button } from './ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'

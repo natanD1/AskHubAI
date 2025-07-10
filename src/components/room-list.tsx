@@ -1,6 +1,6 @@
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { useRooms } from '@/http/useRooms'
+import { useRooms } from '@/http/use-room'
 import { dayjs } from '@/lib/dayjs'
 import { Badge } from './ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
