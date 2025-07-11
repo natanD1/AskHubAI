@@ -1,8 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* biome-ignore lint/nursery/noUnknownAtRule: <This is a import of @tailwindcss> */
 @custom-variant dark (&:is(.dark *));
 
+/* biome-ignore lint/nursery/noUnknownAtRule: <This is a import of @tailwindcss> */
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -112,9 +114,11 @@
 
 @layer base {
   * {
+    /* biome-ignore lint/nursery/noUnknownAtRule: <This is a import of @tailwindcss> */
     @apply border-border outline-ring/50;
   }
   body {
+    /* biome-ignore lint/nursery/noUnknownAtRule: <This is a import of @tailwindcss> */
     @apply bg-background text-foreground;
   }
 }
