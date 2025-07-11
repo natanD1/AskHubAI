@@ -1,7 +1,7 @@
 export type GetRoomsQuestionsResponse = Array<{
   id: string
-  name: string
   question: string
-  questionsCount: number
+  answer: string | null
   createdAt: string
+  isGeneratingAnswer?: boolean
 }>
