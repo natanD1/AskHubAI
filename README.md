@@ -1,4 +1,4 @@
-# AskHubAI 🤖
+# Projeto Askhub AI
 
 Uma aplicação moderna de Q&A (Perguntas e Respostas) com **Inteligência Artificial** desenvolvida em React e TypeScript. O projeto permite criar salas de perguntas interativas onde usuários podem fazer perguntas via texto ou gravação de áudio e receber respostas automatizadas geradas por IA.
 
