@@ -372,8 +372,6 @@ Este projeto está sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) par
 
 **Natan Dourado** - [@natanD1](https://github.com/natanD1)
 
-Desenvolvido com ❤️ durante o evento da **Rocketseat**
-
 ---
 
 <div align="center">
