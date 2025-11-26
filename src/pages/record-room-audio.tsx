@@ -1,9 +1,11 @@
 /** biome-ignore-all lint/suspicious/noConsole: <Testing> */
 
-import { Pause } from 'lucide-react'
-import { useRef, useState } from 'react'
-import { Navigate, useParams } from 'react-router-dom'
+import { ArrowLeft, Paperclip, Pause } from 'lucide-react'
+import { type ChangeEvent, useRef, useState } from 'react'
+import { Link, Navigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { useRooms } from '@/http/use-room'
 
 type RoomParams = {
   roomId: string
@@ -17,6 +19,7 @@ type RoomParams = {
  * e verifica se a API `MediaRecorder` está implementada como uma função.
  * Retorna `true` se todas as APIs necessárias forem suportadas, caso contrário retorna `false`.
  */
+
 const isRecordingSupported =
   !!navigator.mediaDevices &&
   typeof navigator.mediaDevices.getUserMedia === 'function' &&
@@ -24,9 +27,14 @@ const isRecordingSupported =
 
 export function RecordRoomAudio() {
   const [isRecording, setIsRecording] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
+
   const recorder = useRef<MediaRecorder | null>(null)
   const params = useParams<RoomParams>()
+  const { data } = useRooms()
   const intervalRef = useRef<NodeJS.Timeout>(null)
+
+  const currentRoom = data?.find((room) => room.id === params.roomId)
 
   function stopRecording() {
     setIsRecording(false)
@@ -38,6 +46,44 @@ export function RecordRoomAudio() {
     if (intervalRef.current) {
       clearInterval(intervalRef.current)
     }
+  }
+
+  async function uploadFile(file: File) {
+    const formData = new FormData()
+
+    formData.append('file', file)
+
+    setIsUploading(true)
+
+    try {
+      const response = await fetch(`http://localhost:3333/rooms/${params.roomId}/file`, {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error('Erro ao enviar o arquivo')
+      }
+
+      const result = await response.json()
+
+      console.log('Upload successful:', result)
+
+      return result
+    } catch (error) {
+      console.error('Upload failed:', error)
+      alert('Falha ao enviar o arquivo. Por favor, tente novamente.')
+    }
+  }
+
+  function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+
+    if (!file) {
+      return
+    }
+
+    uploadFile(file)
   }
 
   async function uploadAudio(audio: Blob) {
@@ -112,7 +158,7 @@ export function RecordRoomAudio() {
     intervalRef.current = setInterval(() => {
       recorder.current?.stop()
       createRecorder(audio)
-    }, 5000)
+    }, 10_000)
   }
 
   if (!params.roomId) {
@@ -120,16 +166,51 @@ export function RecordRoomAudio() {
   }
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center gap-3">
-      {isRecording ? (
-        <Button onClick={stopRecording} variant={'destructive'}>
-          <Pause className="bold" />
-          Pausar Gravação
-        </Button>
-      ) : (
-        <Button onClick={startRecording}>Gravar Audio</Button>
-      )}
-      {isRecording ? <p>Gravando...</p> : <p>Pausado</p>}
+    <div className="min-h-screen bg-zinc-950">
+      <div className="container mx-auto flex h-screen max-w-4xl flex-col px-4 py-8">
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="mb-2 font-bold text-3xl text-foreground">Conteúdo - {currentRoom?.name}</h1>
+            <p className="text-muted-foreground">Grave a aula ou realize o anexo de documento referente a aula.</p>
+          </div>
+
+          <Link to={`/room/${params.roomId}`}>
+            <Button variant="outline">
+              <ArrowLeft className="mr-2 size-4" />
+              Voltar
+            </Button>
+          </Link>
+        </div>
+
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 ">
+          {isRecording ? (
+            <Button onClick={stopRecording} variant={'destructive'}>
+              <Pause className="bold animate-pulse" />
+              Pausar Gravação
+            </Button>
+          ) : (
+            <Button onClick={startRecording}>Gravar Audio</Button>
+          )}
+          {isRecording ? <p>Gravando...</p> : <p>Pausado</p>}
+
+          <label htmlFor="file-upload">
+            <Button asChild>
+              <span>
+                <Paperclip className="bold" />
+                {isUploading ? 'Enviando...' : 'Anexar Documento'}
+              </span>
+            </Button>
+          </label>
+          <Input
+            accept=".pdf,.doc,.docx,.txt"
+            className="hidden"
+            disabled={isUploading}
+            id="file-upload"
+            onChange={handleFileUpload}
+            type="file"
+          />
+        </div>
+      </div>
     </div>
   )
 }
